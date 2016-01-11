@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>gettingStarted FatFree</title>
+        <style>
+
+            /* setting default-style for test-page */
+            body { margin: 0px; font-family: helvetica; background-color: lightgrey;}
+            /* setting bodys attributes to display flex */
+            body > div {
+                display: flex;
+                flex-flow: row wrap;
+                /* force min-width so content doesnt shrink beneth this width */
+                /* min-width: 800px; */
+            }
+            /* setting default style to all elements */
+            body > div:nth-child(1) > header, nav, main, aside, footer {
+                color: white;
+                font-weight: bold;
+                font-size: 15pt;
+                background: #7e7e7e;
+                border-radius: 7px;
+                margin: 5px;
+                padding: 20px;
+            }
+            /* setting flexattributes to flex items with "nth-child(1)" */
+            body > div:nth-child(1) > header { order:1; height: 100px; flex: 0 1 100%; }
+            body > div:nth-child(1) > nav { order:2; flex: 0 1 200px; }
+            body > div:nth-child(1) > main { order:3; min-height: 400px; min-width: 200px; flex: 1; }
+            body > div:nth-child(1) > aside { order:4; flex: 0 1 200px; }
+            body > div:nth-child(1) > footer { order:5; height: 100px; flex: 0 1 100%; }
+        </style>
+    </head>
+
+    <body>
+        <div>
+            <header>
+                <img src="https://pbs.twimg.com/profile_images/2984317728/8205132f9c1ef52bf8d6bdc6660740df_400x400.png" width="80px" height="auto" style="float: left; margin-right: 50px;">
+                <h1>GettingStarted FatFree</h1>
+            </header>
+            <nav>
+                <h3>Navigation</h3>
+            </nav>
+            <main>
+                <p>Hello {{ @name }} !</p>
+            </main>
+            <aside>
+                <p>Fat<br>Free<br>Framework<br><hr><br>F3</p>
+            </aside>
+            <footer>
+                <h6>© 2016 Footer</h6>
+            </footer>
+        </div>
+    </body>
+</html>
