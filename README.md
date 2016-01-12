@@ -7,7 +7,7 @@ body {
 
 </style>
 
-# gettingStarted FatFree
+# gettingStarted-FatFree
 
 Setting up a new project can always be a little exhausting since there are so many tiny configuration steps to go through.  
 
