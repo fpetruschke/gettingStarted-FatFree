@@ -94,6 +94,10 @@ Please also note following sources for getting started or for getting detailled 
 
 [20. Joins](#20joins)
 
+## Creating LogIn
+
+> Now that we came so far, we should have a login possibility for a 'hidden' area.
+
 
 [Conclusion](#conclusion)
 
@@ -917,10 +921,659 @@ It seems to be quite easy, doesn't it?
 
 --------
 
+
+#21.IncludingBootstrapAndJQuery
+
+Why not including bootstrap for some optical improvements?
+
+You can get the sources from **[here](http://getbootstrap.com/getting-started/)**.
+
+Then you have to copy the content of the files in your app under `app/web/...` .
+
+Please note that you have to create a new folder called "fonts" into the web directory.
+
+I decided to just copy the minimized versions of the scripts since I just want to use and not edit them.
+
+(Since they're comporessed, they'll also load faster.)
+
+The app structure under `app/web/..` looks like this:
+
+```  
+D app/  
+D | web/  
+D | | css/
+F | | | bootstrap.min.css
+F | | | bootstrap-theme.min.css
+D | | fonts/  
+F | | | glyphicons-halflings-regular.eot
+F | | | glyphicons-halflings-regular.svg
+F | | | glyphicons-halflings-regular.ttf
+F | | | glyphicons-halflings-regular.woff
+F | | | glyphicons-halflings-regular.woff2
+D | | img/  
+D | | js/  
+F | | | bootstrap.min.js
+F | | | npm.js
+
+```
+
+**jQuery & jQuery ui**
+
+Since bootstrap needs jQuery to work properly and jQuery ui offers some nice features, we also download those sources.
+
+**[Get jQuery](https://jquery.com/download/)** (Just copy plain text and paste it into a new js-file called "jquery-1.12.0.min.js")
+
+**[Get jQuery ui](http://jqueryui.com/download/)** (Scroll down to the bottom - there you can choose a preconfigured theme - I took "smoothness")
+
+> Note: You can customize your jquery ui. Visit [this page](http://jqueryui.com/themeroller/) and download the cusomized package instead.
+
+**For jQuery ui we need a new "images"-folder under `app/web/css/`!**
+ 
+ Then copy...
+ 
+ * content of the folder "images" into `app/web/css/images/`
+ 
+ * jquery-ui.min.css into `app/web/css/`
+ 
+ * jquery-ui.theme.min.css into `app/web/css/`
+ 
+ * jquery-ui.min.js into `app/web/js/`
+
+
+Now we'll include all of the above in an additional "header.html" which we create under `app/MVC/View/`
+
+```HTML
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    
+    <!-- Default title of the page is set in config.ini -->
+    <title>{{ @title }}</title>
+
+    <!-- jQuery -->
+    <script src="app/web/js/jquery-1.12.0.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="app/web/js/jquery-ui.min.js"></script>
+    <link href="app/web/css/jquery-ui.min.css" rel="stylesheet">
+    <link href="app/web/css/jquery-ui.theme.min.css" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="app/web/css/bootstrap.min.css" rel="stylesheet">
+    <link href="app/web/css/bootstrap-theme.min.css" rel="stylesheet">
+    <script src="app/web/js/bootstrap.min.js"></script>
+    <script src="app/web/js/npm.js"></script>
+
+</head>
+
+```
+
+#22.CreatingUserDashboard
+
+Let's create a UserDashboard (without functionality).
+
+Let's just use the bootstrap example dashboard. 
+
+**Custom CSS**
+
+First create a css-file under `app/web/css/`:
+
+```HTML
+
+
+body {
+    padding-top: 50px;
+}
+.sub-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+.navbar-fixed-top {
+    border: 0 none;
+}
+.sidebar {
+    display: none;
+}
+@media (min-width: 768px) {
+    .sidebar {
+        background-color: #f5f5f5;
+        border-right: 1px solid #eee;
+        bottom: 0;
+        display: block;
+        left: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 20px;
+        position: fixed;
+        top: 51px;
+        z-index: 1000;
+    }
+}
+.nav-sidebar {
+    margin-bottom: 20px;
+    margin-left: -20px;
+    margin-right: -21px;
+}
+.nav-sidebar > li > a {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.nav-sidebar > .active > a, .nav-sidebar > .active > a:hover, .nav-sidebar > .active > a:focus {
+    background-color: #428bca;
+    color: #fff;
+}
+.main {
+    padding: 20px;
+}
+@media (min-width: 768px) {
+    .main {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
+.main .page-header {
+    margin-top: 0;
+}
+.placeholders {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.placeholders h4 {
+    margin-bottom: 0;
+}
+.placeholder {
+    margin-bottom: 20px;
+}
+.placeholder img {
+    border-radius: 50%;
+    display: inline-block;
+}
+
+```
+
+**Header adjustment**
+
+Adjust our "header.html" under `app/MVC/View/` and add following lines above the head-closing-tag:
+
+```HTML
+
+    <!-- Custom style for dashboards -->
+    <link rel="stylesheet" href="app/web/css/dashboard.css">
+
+```
+
+**Dashboard HTML**
+
+Now create a new html file called "userDashboard.html" and include the "header.html":
+
+```HTML
+
+<html lang="de">
+
+    <!-- get preconfigured header here -->
+    <include href="header.html" />
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+
+```
+
+**Since the bootstrap example is too long to display it here, take a look at the containing `app/MVC/View/userDashboard.html`**
+
+**Testing Route**
+
+Add following route to the routes.ini:
+
+```INI
+
+GET /user=MainController->renderUserDashboard
+
+```
+
+And then add following code to the MainController.php:
+
+```php
+
+<?php
+
+    function renderUserDashboard() {
+        // setting the page title
+        $this->f3->set('title', 'UserDashboard');
+    
+        // instantiating new template object
+        $template = new Template();
+        echo $template->render('userDashboard.html');
+    
+    }
+
+```
+
+Now go to `localhost/gettingStarted/user` and see if everything is displayed properly.
+
+> NOTE: I suppose installing the firebug-addOn for Firefox. With that installed you can right click the page, click on "Network" tab and reload the page. With this you can check if all sources are loaded correctly or if there are any errors you have to take care of. Of course the built-in solutions of todays' browser are pretty good as well.
+
+--------
+
+#23.CreatingALoginTemplate
+
+Now that we know that all sources are available and it's nice looking, we can begin with creating the login template.
+
+**HTML**
+
+Create a new template called "login.html" under `app/MVC/View/`
+
+```HTML
+
+<!DOCTYPE HTML>
+<html lang="de">
+
+    <!-- get preconfigured header here -->
+    <include href="header.html" />
+
+    <body>
+        <div class="container">
+            <form class="form-signin" method="post" action="authenticate">
+                <h2 class="form-signin-heading">Please sign in</h2>
+                <label class="sr-only" for="inputEmail">Email address</label>
+                <input type="text" name="username" autofocus="" required="" placeholder="Email address" class="form-control" id="inputEmail">
+                <label class="sr-only" for="inputPassword">Password</label>
+                <input type="password" name="password" required="" placeholder="Password" class="form-control" id="inputPassword">
+                <button type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button>
+            </form>
+        </div>
+    </body>
+</html>
+
+
+```
+
+**CSS**
+
+Now create a custom login css like following under `app/web/css/` and call it "login.css":
+
+```HTML
+
+body {
+    background-color: #eee;
+    padding-bottom: 40px;
+    padding-top: 40px;
+}
+.form-signin {
+    margin: 0 auto;
+    max-width: 330px;
+    padding: 15px;
+}
+.form-signin .form-signin-heading, .form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+.form-signin .form-control {
+    box-sizing: border-box;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    position: relative;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: -1px;
+}
+.form-signin input[type="password"] {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-bottom: 10px;
+}
+
+```
+
+**Route**
+
+Add following line to the "config.ini":
+
+```INI
+
+    GET /login=UserController->renderLogin
+
+```
+
+Then create a new Controller called "UserController.php" in `app/MVC/Controller/`
+
+```php
+
+<?php
+
+class UserController extends Controller {
+
+    function renderLogin() {
+        // setting the page title
+        $this->f3->set('title', 'Login');
+
+        // instantiating new template object
+        $template = new Template();
+        echo $template->render('login.html');
+    }
+    
+}
+
+```
+
+**Visit**
+
+Now take a look at `localhost/gettingStarted/login`
+
+-------
+
+#24.AddingLogInFunctionality
+
+Now that we have our template set up, we need to add functionality to it.
+
+**Route**
+
+Add a new route in the "routes.ini" (`app/config/routes.ini`)
+
+```INI
+    
+    ; POSTs
+    POST /authenticate=UserController->authenticate
+
+```
+
+**Database**
+
+For the login functionality we need a User table with passwords.
+
+So create a new table in our database:
+
+```SQL
+
+CREATE TABLE `gettingStarted`.`users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(180) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `role` VARCHAR(45) NOT NULL DEFAULT 'USER',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+```
+
+Now we want to create our first user - let's just call him "user".
+
+But first of all we encrypt a password:
+
+**encrypt password**
+
+Open a console and type `php -a` (interactive shell opens)
+
+Then type `echo password_hash('password' , PASSWORD_DEFAULT);`
+
+Copy the returned string. 
+
+**NOTE! Make sure you don't copy too much. I accidently copied the following "php" and it took me some time to find the mistake!** 
+
+This is the encrypted password for our user "user".
+
+Enter the data into the table. (The fields "id", "role" and "created_at" are filled automatically!)
+
+We just created out first user that we can use for testing the login.
+
+
+**Model**
+
+Now we need to create a Model for our users.
+
+We call it "Users.php" and save it into `app/MVC/Model/`
+
+```php
+
+<?php
+
+    class Users extends DB\SQL\Mapper {
+    
+        public function __construct(DB\SQL $db) {
+            parent::__construct($db, 'gettingStarted.users');
+        }
+    
+        public function getByName($name) {
+            $this->load(array('username=?', $name));
+        }
+    
+    }
+
+```
+
+**Controller**
+
+Now adjust the UserController.php and add method "authenticate" (`app/MVC/Controller/UserController.php`)
+
+```php
+
+<?php
+
+    function authenticate() {
+    
+            // getting username and password from sent POST
+            $username = $this->f3->get('POST.username');
+            $password = $this->f3->get('POST.password');
+    
+            $user = new Users($this->db);
+            $user->getByName($username);
+    
+            // see if user exists
+            if($user->dry()) {
+                echo "User doesn't exist.";
+            }
+            
+            // see if password match
+            if(password_verify($password, $user->password)) {
+                echo "Password OK";
+            } else {
+                echo "Password wrong";
+            }
+    
+        }
+
+```
+
+**Visit**
+
+Open `localhost/gettingStarted/login` and try out the login form.
+
+
+| username | password | expected result  |
+| -------- | -------- | ---------------- |
+| user     | password | OK               |
+| user     | 1234     | PASSWORD KO      |
+| test     | test     | USER NOT FOUND   |
+|          | 1234     | REQUIRED MISSING |
+| test     |          | REQUIRED MISSING |
+
+--------
+
+#25.Rerouting
+
+It is not very useful to see an echo output as result.
+
+(Nor is it save to tell the user that a specific parameter was wrong!)
+
+So let's use FatFrees' rerouting.
+
+Adjust the `app/MVC/Controller/UserController.php` as following:
+
+```php
+
+<?php
+        if($user->dry()) {
+            $this->f3->reroute('/login');
+        }
+
+        if(password_verify($password, $user->password)) {
+            
+            $this->f3->reroute('/user');
+        } else {
+            $this->f3->reroute('/login');
+        }
+
+```
+
+So when the user input was wrong, the user gets redirected to the login form.
+
+If everything is correct, the above created "userDashboard" is called.
+
+-----------
+
+#26.Session
+
+For login functionality to make sense, we'll add a session to the authentification process.
+
+We'll use Cache for this. Edit your "config.ini" stored in `app/config/` and add:
+
+```INI
+
+; enabling cache
+CACHE=true
+
+```
+
+Now we have to edit out "index.php" for opening a session:
+
+Just add a `new Session();` above the `$f3->run();`.
+
+Everytime "index.php" get's called, a new session is started and saved to / loaded from cache.
+
+Back to our "UserController.php".
+
+Please edit the below block:
+
+```php
+
+<?php
+
+if(password_verify($password, $user->password)) {
+    // THE FOLLOWING LINE IS NEW !!!!!
+    $this->f3->set('SESSION.user', $user->username);
+    $this->f3->reroute('/user');
+} else {
+    $this->f3->reroute('/login');
+}
+
+```
+
+Now we have to adjust our "Controller.php" in `app/MVC/Controller/`.
+
+Add following code into the "beforeroute" method:
+
+```php
+
+<?php
+
+    // function is called before every single routing!
+    function beforeroute() {
+        if($this->f3->get('SESSION.user') === null) {
+            $this->f3->reroute('/login');
+            exit;
+        }
+    }
+
+```
+
+Then we also need to add an empty "beforeroute" method to the "UserController.php":
+
+```php
+
+<?php
+
+    function beforeroute() {
+    }
+    
+```
+
+**Done!**
+
+> If you now log in with the correct username and password, your session gets cached and you won't have to login again.
+
+--------
+
+#27.TemplateHierarchy
+
+You have noticed before that we created a "header.html" and then included this header into the "dashboard.html" and "login.html".
+
+Now we want to take the "layout.html" and make it the parent template from which every other template inherits.
+
+We want to use the "layout.html" as a modular skeleton on which we can place other elements (=templates).
+
+We will keep it simple here and just put a static header and modular content into our "layout.html".
+
+First please copy the whole content of your "layout.html" into a newly created "mainpage.html".
+
+Then clear everything that is in the "layout.html".
+
+Add following line into the "layout.html" :
+
+```HTML
+
+<include href="header.html"/>
+<include href="{{ @view }}"/>
+<include href="footer.html"/>
+
+```
+
+As you can already imagine: We need to create a footer template.
+
+Just create a new html-template under `app/MVC/View/`, call it "footer.html" and fill it with:
+
+```HTML
+
+    <hr>
+    <h6 style="margin-left: 50px;">© currentYear yourName</h6>
+
+```
+
+The only thing we have to do now is setting every template rendering to "layout.html" AFTER having the @view set.
+
+For example inside the render-methods of the MainController.php:
+
+```php
+
+<?php
+
+    $template = new Template();
+    $this->f3->set('view', 'mainpage.html');
+    echo $template->render('layout.html');
+
+```
+
+Make sure you always set the global 'view' variable. 
+
+You could also set a default value in the "config.ini".
+
+Also keep in mind that there is no need for a <header>-block in any other template!
+
+**BUT:** You can place individuel <styles> to a template.
+
+For example: In our "header.html" are the styles for the dashboard and the login contained.
+
+We don't need / don't want thoses styles on every template!
+
+So just place/include them in the correct template.
+
+> Note: Again I recommend using firebug (or similar tools - or [F12]) for scanning and monitoring the behavior of your project inside the browser. You should check if any site contains more than one header and clean it up.
+
+
 #Conclusion
 
-What we have now is a fully working web application with two simple routes and a simple template.
+What we have now is a fully working web application with some basic functionality.
 
-We're also already using a Fat Free Plugin for rendering Markdown - it's working like a charm.
+We managed database connection and queries, templating and user authentification.
 
 [go back to the starting page](/gettingStarted/)

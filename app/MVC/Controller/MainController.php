@@ -21,6 +21,7 @@ class MainController extends Controller {
 
         // instantiating new template object
         $template = new Template();
+        $this->f3->set('view', 'mainpage.html');
         echo $template->render('layout.html');
     }
 
@@ -31,6 +32,17 @@ class MainController extends Controller {
         $fileContent = $this->f3->read($filePath); // read file contents
         // render the content as a Mardown instance
         echo \Markdown::instance()->convert($fileContent);
+    }
+
+    function renderUserDashboard() {
+        // setting the page title
+        $this->f3->set('title', 'UserDashboard');
+
+        // instantiating new template object
+        $template = new Template();
+        $this->f3->set('view', 'userDashboard.html');
+        echo $template->render('layout.html');
+
     }
 
 }

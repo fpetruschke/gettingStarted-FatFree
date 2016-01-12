@@ -11,4 +11,6 @@ $f3 = \Base::instance();
 $f3->config("app/config/config.ini");
 $f3->config("app/config/routes.ini");
 
+new Session();
+
 $f3->run();
