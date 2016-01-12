@@ -43,7 +43,13 @@
                 <h3>Navigation</h3>
             </nav>
             <main>
-                <p>Hello {{ @name }} !</p>
+                <p><i>controller generated:</i> Hello {{ @name }} !</p>
+
+                <!-- Looping over all table entries -->
+                <repeat group="{{ @msg }}" value="{{ @number }}">
+                    <p>[[ {{ @number.shorttitle }} ]] {{ @number.message }}</p>
+                </repeat>
+
             </main>
             <aside>
                 <p>Fat<br>Free<br>Framework<br><hr><br>F3</p>
