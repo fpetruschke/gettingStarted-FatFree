@@ -7,6 +7,19 @@ body {
 
 </style>
 
+
+# Welcome to the "gettingStarted-FatFree"-Project!
+
+
+The project is meant to be tutorial-like.
+
+You can **either** read the below chapters for creating this project on your own from scratch.
+
+**Or** you can read the [Wiki](https://github.com/fpetruschke/gettingStarted-FatFree/wiki) and get to know how you can run this project locally.
+
+
+----
+
 # gettingStarted-FatFree
 
 Setting up a new project can always be a little exhausting since there are so many tiny configuration steps to go through.  
