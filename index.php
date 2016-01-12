@@ -5,7 +5,7 @@
  * @version 1.0
  */
 
-// following four lines must be included for routing
+// following four lines must be included for autoloading and routing
 require ("vendor/autoload.php");
 $f3 = \Base::instance();
 $f3->config("app/config/config.ini");

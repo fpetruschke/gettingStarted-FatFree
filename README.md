@@ -30,12 +30,10 @@ This project is meant to lead you to set up a working environment for using PHP 
 
 It is simple, it is fetherlight and makes a lot of fun.
 
-As always: there a lot of ways to get where you want to go. This is just my way of getting into it.  
+As always: there a lot of ways to get where you want to go. This is just my way of getting there.  
 
 Have fun.
 
-
->_**Note**: Some chapters - e.g. the structuring of your application - are highly individual. Just try to comprehend my steps but then just go ahead and do whatever you want._
 
 >_**Info**: for writing an own README.md like this, following link might be helpful: [https://enterprise.github.com/downloads/en/markdown-cheatsheet.pdf](https://enterprise.github.com/downloads/en/markdown-cheatsheet.pdf)_
 
@@ -43,11 +41,11 @@ Have fun.
 
 **Further Info**  
 
-Please also note following sources for getting started or for getting detailled help:  
+Please also note following sources for getting started or for getting detailed information:  
 
 * [Official Fat Free Framework Documentation](http://fatfreeframework.com/user-guide)
 
-* [Fatfree PHP Framework Youtube-Tutorials by takacsmark](https://www.youtube.com/watch?v=R-ydcTTrR5s&list=PLX0Ak4vUBQfClFDicUaSfm-urMi_kt3cg)
+* [FatFree PHP Framework Youtube-Tutorials by takacsmark](https://www.youtube.com/watch?v=R-ydcTTrR5s&list=PLX0Ak4vUBQfClFDicUaSfm-urMi_kt3cg)
 
 
 --------
@@ -111,6 +109,19 @@ Please also note following sources for getting started or for getting detailled 
 
 > Now that we came so far, we should have a login possibility for a 'hidden' area.
 
+[21. Including Bootstrap And JQuery](#21IncludingBootstrapAndJQuery)
+
+[22. Creating User Dashboard](#22CreatingUserDashboard)
+
+[23. Creating A Login Template](#23CreatingALoginTemplate)
+
+[24. Adding LogIn Functionality](#24AddingLogInFunctionality)
+
+[25. Rerouting](#25Rerouting)
+
+[26. Session](#26Session)
+
+[27. Template Hierarchy](#27TemplateHierarchy)
 
 [Conclusion](#conclusion)
 
@@ -136,9 +147,11 @@ When composer is installed continue...
 
 #2.FatFreeFramework
 
-Change to the directory of your new F3-project (let's say it's in `/var/www/test/` ).
+Create a new project directory. Let's assume this: `sudo mkdir /var/www/gettingStarted-FatFree`
 
-Execute following command: `$ composer require bcosca/fatfree`
+Change into that directory.
+
+Execute following command: `composer require bcosca/fatfree`
 
 (more versions on [https://packagist.org/packages/bcosca/fatfree](https://packagist.org/packages/bcosca/fatfree))
 
@@ -148,13 +161,13 @@ Then execute `composer update`
 
 #3..htaccess
 
-You might have to create the .htaccess under your project root (where also the index.php will be located).
+Create an .htaccess under your project root (where also the index.php will be located).
 
 It should contain following content (**make sure you set the correct root directory for your project**):
 
 ```
 RewriteEngine On
-RewriteBase /test/
+RewriteBase /gettingStarted-FatFree/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
@@ -166,11 +179,9 @@ RewriteRule .* index.php [L,QSA]
 
 #4.apache2Config
 
-You might need to set the correct document root in your apache2 config:
-`sudo nano /etc/apache2/conf`
+Execute `sudo nano /etc/apache2/apache2.conf` 
 
-Make sure following entries are set up properly:  
-`sudo nano /etc/apache2/apache2.conf`
+See where the correct document root of your apache is located and compare it to your assumption. 
 
 **You can outline existing configuration using '#'! You might want to keep the old config.**
 
@@ -188,26 +199,29 @@ DocumentRoot "/var/www/"
 
 ```
 
-Then run `sudo service apache2 restart` for using the above configuration.
+Press [Ctrl] + [O] to save and [Ctrl] + [X] to exit.
+
+Then execute `sudo service apache2 restart` for using the above configuration.
 
 --------
 
 #5.mod_rewrite
 
-Use following command `cd /etc/apache2/mods-enabled && ll` for searching after following entry:  
+Use following command `ll /etc/apache2/mods-enabled/ | grep 'rewrite.load'` for searching after following entry:  
 
 'rewrite.load' (it should be a symbolic link)  
 
-If it's not in there use following commands to install the mod and restart apache:
+If there's no result, you have to enable the mod.
 
-1. `sudo a2enmod rewrite`
-2. `sudo service apache2 restart`
+Therefore use following command: `sudo a2enmod rewrite`
+
+Now restart apache again: `sudo service apache2 restart`
 
 --------
 
 #6.StructureI
 
-You could adapt following dir structure (F = file, D = directory:  
+You could adapt following dir structure (F = file, D = directory):  
 
 ```
 F index.php  
@@ -223,7 +237,7 @@ F | |  routes.ini
 
 ```
 
-Add the two files "config.ini" and "routes.ini" into the `app/config/`  
+Add the two files "config.ini" and "routes.ini" into the `app/config/` as seen above.
 
 --------
 
@@ -237,7 +251,7 @@ It should contain following information:
 
 <?php
 
-// following four lines must be included for routing
+// following four lines must be included for autoloading and routing
 require ("vendor/autoload.php");
 $f3 = \Base::instance();
 $f3->config("app/config/config.ini");
@@ -262,11 +276,13 @@ $f3->run();
 
 This is always a wiry thing.   
 
-Set the permission of your project root dir: `sudo chmod -R 777 /path/to/dir/`  
+Set the permission of your project root dir: `sudo chmod -R 777 /var/www/gettingStarted-FatFree/`  
 
-You might have to reconfigure the permissions later again. If not only for safety purposes.
+You might want to reconfigure the permissions later again. 
 
 But for now we just keep it simple and put it like that.
+
+(Never use this configuration productive though.)
 
 --------
 
@@ -274,10 +290,11 @@ But for now we just keep it simple and put it like that.
 
 Have an eye on your live-log: `sudo tail -f /var/log/apache2/error.log`  
 
-There you can find information if your project is still misconfigured.  
-Keep that console window open.  
+There you can find information if your project is still misconfigured.
+  
+Keep that console window open when you're browsing your application.
 
-**Now** open your browser and go to `localhost/test/gettingStarted/`   
+**Now** open your browser and go to `http://localhost/gettingStarted-FatFree/`   
 :tada: Voíla! :tada:
 
 --------
@@ -285,7 +302,7 @@ Keep that console window open.
 #10.StructureII
 
 Let's expand our app structure like following:  
-(_Note: This is just, how I like it. You can do whatever you want. But beware: You must adjust your routes._)  
+(_Note: This is just how I like it. You can do whatever you want. But beware: You must adjust your routes and always keep in mind your own app structure when going through following chapters._)  
 
 ```
 F index.php  
@@ -332,6 +349,8 @@ DEBUG=3
 
 ```
 
+This is perfectly for developing and debugging.
+
 Then go into your `app/config/routes.ini` and add the following routes:
 
 ```ini
@@ -357,7 +376,7 @@ GET /about=MainController->renderAbout
 <html>
     <head>
         <meta charset="utf-8">
-        <title>gettinStarted</title>
+        <title>gettinStarted-FatFree</title>
         <link rel="shortcut icon" href="favicon.ico" >
         <link rel="icon" href="img/animated_favicon.gif" type="image/gif" >
         <style>
@@ -366,7 +385,7 @@ GET /about=MainController->renderAbout
     
     <body>
         <div>
-            <h1>gettingStarted</h1>
+            <h1>gettingStarted-FatFree</h1>
             <p>Fat Free PHP Framework</p>
             <p>Hello {{ @name }} !</p>
         </div>
@@ -471,17 +490,17 @@ AUTOLOAD=app/MVC/Controller/
 
 #12.AnotherVisit
 
-First make sure you use `sudo chmod -R 777 /path/to/your/project/` for setting permissions.  
+First make sure you use `sudo chmod -R 777 /var/www/gettingStarted-FatFree/` for setting permissions.  
 
-Sind we added a lot of new directories and a few files, the default permissions might crash your app.  
+Since we added a lot of new directories and a few files, the default permissions might crash your app.  
 
 Again: have an eye on your live-log: `sudo tail -f /var/log/apache2/error.log`    
 
 Keep that console window open.  
 
-**NOW** open your browser and go to `localhost/yourDirNameHere/gettingStarted/`   
+**NOW** open your browser and go to `localhost/gettingStarted-FatFree/`   
 
-**THEN** edit the url and change it to `localhost/yourDirNameHere/gettingStarted/about`  
+**THEN** edit the url and change it to `localhost/gettingStarted-FatFree/about`  
 
 --------
 
@@ -503,11 +522,11 @@ You might prefer another one.
 
 For managing your databases it is easy to use the MySQLWorkbench. 
 
-If you're runnin Ubuntu OS you can download it via the Ubuntu Software Center.
+If you're running e.g Ubuntu OS you can download it via the Ubuntu Software Center.
 
 Otherwise you can download it **[here](http://www.mysql.de/products/workbench/)**.
 
-You can find its' codumentation **[here](http://dev.mysql.com/doc/workbench/en/)**
+You can find its' documentation **[here](http://dev.mysql.com/doc/workbench/en/)**
 
 In the MySQL Workbench you can create a new MySQL connection.
 
@@ -609,7 +628,7 @@ devdbpassword="1gettingstarted!"
 
 ```
 
-**Extend the Controller.php** in `app/MVC/Controller/Controller.php` and add following attributes and the contructor:
+**Extend the Controller.php** in `app/MVC/Controller/Controller.php` and add following attributes and the constructor:
 
 ```php
 
@@ -731,7 +750,7 @@ We can leave that out so we just have `$msg = $messages->showAll();` - **but** t
        <i>database generated:</i> {{ @msg.type }}</p>
 ```
 
-For now, we stay with the {{ @msg.message }}.
+Let's stay with the {{ @msg.message }}.
 
 --------
 
@@ -834,9 +853,9 @@ Then refresh your page **ONCE** and delete the code fragment from your MainContr
 
 **Using global**
 
-Please delete the `$3` as parameter in the rendering methods of the MainController.
+Please delete the `$f3` as parameter in the rendering methods of the MainController.
 
-Then use '$this->f3` instead of `$f3` in the methods.
+Then use `$this->f3` instead of `$f3` in the methods.
 
 
 #19.ArraysInTemplates
@@ -1166,7 +1185,7 @@ And then add following code to the MainController.php:
 
 ```
 
-Now go to `localhost/gettingStarted/user` and see if everything is displayed properly.
+Now go to `localhost/gettingStarted-FatFree/user` and see if everything is displayed properly.
 
 > NOTE: I suppose installing the firebug-addOn for Firefox. With that installed you can right click the page, click on "Network" tab and reload the page. With this you can check if all sources are loaded correctly or if there are any errors you have to take care of. Of course the built-in solutions of todays' browser are pretty good as well.
 
@@ -1283,7 +1302,7 @@ class UserController extends Controller {
 
 **Visit**
 
-Now take a look at `localhost/gettingStarted/login`
+Now take a look at `localhost/gettingStarted-FatFree/login`
 
 -------
 
@@ -1400,7 +1419,7 @@ Now adjust the UserController.php and add method "authenticate" (`app/MVC/Contro
 
 **Visit**
 
-Open `localhost/gettingStarted/login` and try out the login form.
+Open `localhost/gettingStarted-FatFree/login` and try out the login form.
 
 
 | username | password | expected result  |
@@ -1572,11 +1591,11 @@ You could also set a default value in the "config.ini".
 
 Also keep in mind that there is no need for a <header>-block in any other template!
 
-**BUT:** You can place individuel <styles> to a template.
+**BUT:** You can place individual <styles> to a template.
 
 For example: In our "header.html" are the styles for the dashboard and the login contained.
 
-We don't need / don't want thoses styles on every template!
+We don't need / don't want those styles on every template!
 
 So just place/include them in the correct template.
 
@@ -1587,6 +1606,6 @@ So just place/include them in the correct template.
 
 What we have now is a fully working web application with some basic functionality.
 
-We managed database connection and queries, templating and user authentification.
+We managed database connection and queries, templating and user authentication.
 
-[go back to the starting page](/gettingStarted/)
+[go back to the starting page](/gettingStarted-FatFree/)
